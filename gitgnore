@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-*.ipynb_checkpoints
-node_modules/
-*.mbtiles
-*.gpkg
-*.tif
-*.iso
-.env

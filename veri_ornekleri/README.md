@@ -1,0 +1,1 @@
+Küçük örnek veriler
