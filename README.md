@@ -1,6 +1,6 @@
 # Firefighter Linux v2.0
 <p align="center">
-  <img src="docs/Firefighter_Linux.png" alt="Firefighter Linux Logo" width="250"/>
+  <img src="docs/Firefighter_Linux_V2.png" alt="Firefighter Linux Logo" width="250"/>
 </p>
 
 # Firefighter Linux v2.0
