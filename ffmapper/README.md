@@ -1,1 +1,1 @@
-FFMapper (offline harita)
+Offline map tool (FFMapper).

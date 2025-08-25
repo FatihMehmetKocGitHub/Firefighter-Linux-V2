@@ -1,1 +1,1 @@
-Belgeler ve plan
+Project docs & plan.

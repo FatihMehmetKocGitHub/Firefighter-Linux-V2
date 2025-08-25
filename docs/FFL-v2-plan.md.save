@@ -1,0 +1,249 @@
+Firefighter Linux v2.0 — Uçtan Uca Yol Haritası
+1. Amaç ve Kapsam
+Amaç: Afet sahası ve kriz masasında kesintisiz çalışacak, internetsiz senaryolara dayanıklı, Türkiye odaklı bir Linux dağıtımı.
+ Kapsam: Deprem analizi, APRS/AX.25 haberleşme, çevrimdışı haritalar, sosyal medya taraması, uydu verisi (opsiyonel), alarm üretimi, tek ISO dağıtımı.
+ Tasarı ilkesi: Offline-first, düşük bağımlılık, Docker yok; gerekirse LXC/Firejail.
+
+2. Kullanım Profilleri
+Saha: GPS/harita işaretleme, APRS/AX.25 mesajlaşma, SDR verisi (opsiyonel), yerel alarm.
+
+
+Kriz Masası: Veri toplama (APRS-IS, sensör, sosyal medya, AFAD/EMSC/USGS), PostgreSQL/PostGIS havuzu, canlı panolar, kural tabanlı uyarılar.
+
+
+Bilimsel/Analiz: JupyterLab/Spyder, ObsPy, GeoPandas, ETAS ard-şok olasılık, Türkiye fay hatları analizi.
+
+
+
+3. Mimari
+Saha cihazı: QGIS/FFMapper, GeoPackage/SQLite, Direwolf→APRX, SDR, alarm.
+
+
+Kriz masası: PostgreSQL/PostGIS, Node-RED+MQTT, JupyterLab, GeoServer/MapLibre panoları, sosyal medya tarayıcılar.
+
+
+Bağlantı açıldığında: Saha verisi rsync/HTTP/MQTT ile senkronize edilir.
+
+
+
+4. Modüller
+Çekirdek: Xubuntu 22.04, ufw, fail2ban, Firejail/LXC.
+
+
+GIS: QGIS, GDAL/OGR, MBTiles, FFMapper.
+
+
+Haberleşme: Direwolf, APRX, Xastir, YAAC, FLDIGI/FLMSG, Pat Winlink, JS8Call.
+
+
+Uydu/SDR: RTL-SDR, GQRX, GNU Radio, SatDump, NOAA/METEOR, GPredict.
+
+
+OSINT: snscrape, telethon, instaloader, feedparser, SpiderFoot (opsiyonel).
+
+
+Analitik: ObsPy, GeoPandas, Cartopy, Folium, ETAS.
+
+
+Alarm: Node-RED, MQTT, TTS, Telegram/E-posta/APRS.
+
+
+Web: WordPress REST API, CPT field_report.
+
+
+
+5. Veri Katmanı
+Saha: GeoPackage + SQLite.
+
+
+Kriz: PostgreSQL + PostGIS (TimescaleDB opsiyonel).
+
+
+Senkron: Offline toplanan veriler → ağ açıldığında EOC’ye aktarılır.
+
+
+
+6. FFMapper
+Veri kaynakları: MBTiles, Türkiye diri fayları, saha raporları.
+
+
+İşlevler: İşaretleme, şablonlar (yol kapalı, yaralı vb.), GPX dışa aktarma, APRS mesaj butonu.
+
+
+Dağıtım: Saha cihazında yerel, EOC’de pano.
+
+
+
+7. Deprem Analizi Defterleri
+01_ingest → katalog çekme ve arşiv
+
+
+02_faults_tr → fay-deprem ilişkisi, yoğunluk haritaları
+
+
+03_etas_nowcast → ard-şok olasılık analizi
+
+
+04_shakemap_light → yer ivmesi/şiddet tahmini
+
+
+05_alert_rules → alarm kurallarının üretimi
+
+
+Not: Çıktılar “olasılık/nowcast”tır; kesin tahmin değildir.
+
+8. Haberleşme Akışları
+Saha: GPS → Direwolf → APRX → kayıt/mesaj.
+
+
+Kriz: APRS-IS → köprü (aprsd/MQTT) → veritabanı → panolar/alarm.
+
+
+Politika: Path ve beacon sade/güvenli.
+
+
+
+9. Panolar
+Operasyon: APRS konumları, saha raporları, sosyal medya sinyalleri, yangın/fay/deprem katmanları.
+
+
+Analiz: Son depremler, ETAS ısı haritası, risk katmanları, tetiklenen alarmlar.
+
+
+
+10. WordPress Entegrasyonu
+CPT: field_report.
+
+
+Akış: REST API ile EOC → WordPress.
+
+
+Gizlilik: Hassas katmanlar EOC’de kalır, WP’de moderasyon.
+
+
+
+11. Dizin Standardı
+/opt/firefighter/ → betikler ve servisler
+
+
+/opt/firefighter/bin/ → yardımcı komutlar
+
+
+/etc/firefighter/ → yapılandırma
+
+
+/data/ → kullanıcı verileri
+
+
+/data/gis/tiles/ → offline haritalar
+
+
+/data/gis/mta_fay.gpkg → fay katmanı
+
+
+/data/field/field_reports.gpkg → saha işaretleri
+
+
+/home/<user>/Notebooks/FFL/ → Jupyter defterleri
+
+
+
+12. ISO ve Dağıtım
+Taban: Xubuntu 22.04
+
+
+Cubic içinde: Paketler, profil seçici, örnek veri.
+
+
+Masaüstü: Saha Paneli, FFMapper, APRS Paneli, JupyterLab, Kriz Panosu.
+
+
+Çıktı: FirefighterLinux-2.0_<tarih>.iso
+
+
+
+13. GitHub Yapısı
+installer/ — ISO notları
+
+
+packages/ — .deb + lisanslar
+
+
+scripts/ — betikler
+
+
+ffmapper/ — harita aracı
+
+
+notebooks/ — Jupyter defterleri
+
+
+flows/ — Node-RED akışları
+
+
+wp-connector/ — WordPress istemcisi
+
+
+data_samples/ — küçük örnek veri
+
+
+
+14. Kabul Kriterleri
+Saha: GPS/harita, APRS mesaj, alarm, rapor aktarımı.
+
+
+Kriz: Veri akışı, panolar, alarm kuralları, WordPress gönderimi.
+
+
+
+15. Riskler
+Lisanslı veri: İlk açılışta indir betiği + atıf.
+
+
+API değişiklikleri: Modüler akış + önbellek.
+
+
+Radyo kullanımı: Profil tabanlı politika.
+
+
+Kaynak kısıtları: Hafif arayüz, sıkıştırma.
+
+
+
+16. Yol Haritası
+APRS/AX.25 modülü
+
+
+FFMapper
+
+
+Jupyter defterleri
+
+
+Node-RED/MQTT
+
+
+WordPress REST
+
+
+ISO/Cubic
+
+
+Kabul testleri
+
+
+
+17. Başarı Ölçütleri
+Tek ISO → profil seçimi + çalışır masaüstü.
+
+
+Saha cihazı internetsiz çalışabiliyor.
+
+
+Kriz masası panoları ve alarm sistemi stabil.
+
+
+WordPress’te kamuya açık özetler.
+
+
+Tüm bileşenlerin lisans ve güvenlik notları mevcut.

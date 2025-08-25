@@ -3,7 +3,7 @@ __pycache__/
 *.ipynb_checkpoints
 node_modules/
 
-# Büyük veri / jeo-dosya
+# Large/binary geodata (do NOT commit)
 *.mbtiles
 *.gpkg
 *.tif
@@ -11,8 +11,12 @@ node_modules/
 *.zip
 *.7z
 *.tar.gz
-*.bin
 *.img
 *.iso
 /data/
-veri_ornekleri/buyuk/*
+
+# Local env & secrets
+.env
+*.key
+*.pem
+*.save

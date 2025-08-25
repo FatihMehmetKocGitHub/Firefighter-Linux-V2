@@ -1,1 +1,1 @@
-Üçüncü parti .deb ve lisans
+3rd-party .deb & licenses.

@@ -1,1 +1,1 @@
-Cubic/ISO notları
+Cubic/ISO build notes.
