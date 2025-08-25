@@ -1,9 +1,8 @@
 # Firefighter Linux v2.0
 <p align="center">
-  <img src="docs/Firefighter_Linux_V2.png" alt="Firefighter Linux Logo" width="250"/>
+  <img src="docs/Firefighter_Linux_V2.png" alt="Firefighter Linux Logo" width="500"/>
 </p>
 
-# Firefighter Linux v2.0
 
 Afet sahası (saha profili) ve kriz masası (EOC profili) için **offline-first** Linux dağıtımı.  
 Anahtar modüller: APRS/AX.25, FFMapper (çevrimdışı harita), Jupyter deprem analizi, Node-RED alarm sistemi, WordPress entegrasyonu.
