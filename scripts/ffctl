@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+FFL_HOME="${FFL_HOME:-/opt/firefighter}"
+FFL_DATA="${FFL_DATA:-/data}"
+FFL_TILES="${FFL_TILES:-/data/gis/tiles}"
+VER="2.0-core-setup"
+
+usage() {
+  cat <<EOP
+ffctl - Firefighter Linux yardımcı aracı
+Kullanım: ffctl <komut>
+
+Komutlar:
+  info              : Sürüm ve özet bilgiler
+  paths             : Standart dizinleri göster
+  tiles-list        : /data/gis/tiles altındaki MBTiles listesini göster
+  tiles-add <dosya> : Bir MBTiles dosyasını /data/gis/tiles altına kopyalar
+EOP
+}
+
+cmd="${1:-info}"
+
+case "$cmd" in
+  info)
+    echo "Firefighter Linux CLI: $VER"
+    echo "HOME=$FFL_HOME"
+    echo "DATA=$FFL_DATA"
+    echo "TILES=$FFL_TILES"
+    ;;
+  paths)
+    printf "%-12s %s\n" "FFL_HOME" "$FFL_HOME"
+    printf "%-12s %s\n" "FFL_DATA" "$FFL_DATA"
+    printf "%-12s %s\n" "FFL_TILES" "$FFL_TILES"
+    ;;
+  tiles-list)
+    find "$FFL_TILES" -maxdepth 1 -type f -name "*.mbtiles" -printf "%f\n" | sort || true
+    ;;
+  tiles-add)
+    src="${2:-}"; [[ -z "${src}" ]] && { echo "Dosya belirtin."; exit 1; }
+    [[ -f "$src" ]] || { echo "Bulunamadı: $src"; exit 1; }
+    cp -v "$src" "$FFL_TILES/"
+    ;;
+  *)
+    usage; exit 1;;
+esac
